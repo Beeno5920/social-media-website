@@ -126,3 +126,4 @@ dmypy.json
 # Other
 *.py~
 __pycache__
+.idea
