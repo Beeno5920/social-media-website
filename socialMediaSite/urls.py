@@ -15,14 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
-from users import views
-
-# For test and debug only
-router = routers.DefaultRouter()
-router.register(r'users', views.UserView, 'user')
+from accounts.views import UserCreateView, LoginView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('userApi/', include(router.urls))  # For test and debug only
+    path("admin/", admin.site.urls),
+    path("register/", UserCreateView.as_view(), name="sign-up"),
+    path("login/", LoginView.as_view(), name="login")
 ]
