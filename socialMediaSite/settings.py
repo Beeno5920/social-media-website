@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     # myApp
     'users',
     'accounts',
+    'posts',
 ]
 
 MIDDLEWARE = [

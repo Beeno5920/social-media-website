@@ -16,9 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from accounts.views import UserCreateView, LoginView
+from posts.views import (
+    PostCreateView,
+    PostDeleteView,
+    PostEditView,
+    PostListView,
+    GetUsersPostsView
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("register/", UserCreateView.as_view(), name="sign-up"),
-    path("login/", LoginView.as_view(), name="login")
+    path("login/", LoginView.as_view(), name="login"),
+    path("createPost/", PostCreateView.as_view(), name="create-post"),
+    path("deletePost/<int:pk>", PostDeleteView.as_view(), name="delete-post"),
+    path("editPost/<int:pk>", PostEditView.as_view(), name="edit-post"),
+    path("getPosts/<str:username>", GetUsersPostsView.as_view(), name="get-posts-from-user"),
+    path("allPosts/", PostListView.as_view(), name="all-posts")
 ]
