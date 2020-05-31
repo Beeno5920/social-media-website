@@ -87,8 +87,8 @@ class CommentCreateView(APIView):
 class GetPostsCommentsView(APIView):
     queryset = Comment.objects.all()
 
-    def post(self, request):
-        postID = request.data.get("post_id")
+    def get(self, request):
+        postID = request.GET.get("post_id")    # request.data.get("post_id")
         try:
             Post.objects.get(pk=postID)
         except:
