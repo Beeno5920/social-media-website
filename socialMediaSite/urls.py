@@ -21,7 +21,10 @@ from posts.views import (
     PostDeleteView,
     PostEditView,
     PostListView,
-    GetUsersPostsView
+    GetUsersPostsView,
+    CommentCreateView,
+    GetPostsCommentsView,
+    LikeView
 )
 
 urlpatterns = [
@@ -32,5 +35,8 @@ urlpatterns = [
     path("deletePost/<int:pk>", PostDeleteView.as_view(), name="delete-post"),
     path("editPost/<int:pk>", PostEditView.as_view(), name="edit-post"),
     path("getPosts/<str:username>", GetUsersPostsView.as_view(), name="get-posts-from-user"),
-    path("allPosts/", PostListView.as_view(), name="all-posts")
+    path("allPosts/", PostListView.as_view(), name="all-posts"),
+    path("createComment/", CommentCreateView.as_view(), name="create-comment"),
+    path("getComments/", GetPostsCommentsView.as_view(), name="get-comments-of-a-post"),
+    path("like/", LikeView.as_view(), name="like")
 ]

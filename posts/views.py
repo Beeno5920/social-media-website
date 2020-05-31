@@ -11,8 +11,13 @@ from rest_framework.generics import (
     RetrieveAPIView,
     RetrieveUpdateAPIView
 )
-from .models import Post
-from .serializers import PostSerializer, PostCreateSerializer
+from .models import Post, Comment, Like
+from .serializers import (
+    PostSerializer,
+    PostCreateSerializer,
+    CommentSerializer,
+    CommentCreateSerializer
+)
 
 
 # Create your views here.
@@ -59,3 +64,57 @@ class GetUsersPostsView(APIView):
         posts_data = PostSerializer(posts, many=True)
 
         return Response(posts_data.data, status=status.HTTP_200_OK)
+
+
+class CommentCreateView(APIView):
+    queryset = Comment.objects.all()
+
+    def post(self, request):
+        postID = request.data.get("post_id")
+        content = request.data.get("content")
+        try:
+            post = Post.objects.get(pk=postID)
+        except:
+            return Response({"Error": "Post does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        comment = Comment.objects.create(owner=request.user, content=content, post=post)
+        comment.save()
+
+        comment_data = CommentSerializer(comment)
+
+        return Response(comment_data.data, status=status.HTTP_201_CREATED)
+
+
+class GetPostsCommentsView(APIView):
+    queryset = Comment.objects.all()
+
+    def post(self, request):
+        postID = request.data.get("post_id")
+        try:
+            Post.objects.get(pk=postID)
+        except:
+            return Response({"Error": "Post does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        comments = Comment.objects.filter(post=postID).select_related()
+        comments_data = CommentSerializer(comments, many=True)
+
+        return Response(comments_data.data, status=status.HTTP_200_OK)
+
+
+class LikeView(APIView):
+    queryset = Comment.objects.all()
+
+    def post(self, request):
+        postID = request.data.get("post_id")
+        try:
+            post = Post.objects.get(pk=postID)
+        except:
+            return Response({"Error": "Post does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            like = Like.objects.get(owner=request.user, post=postID)
+            like.delete()
+            post.numOfLikes -= 1
+            post.save(force_update=True)
+        except:
+            like = Like.objects.create(owner=request.user, post=post)
+            like.save()
+
+        return Response({"post_id": postID, "num_of_likes": post.numOfLikes}, status=status.HTTP_200_OK)

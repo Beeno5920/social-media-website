@@ -44,8 +44,17 @@ def save_comment(sender, instance, created, **kwargs):
     if created:
         comment = instance
         post = comment.post
-        post.comment_count = post.comments.count()
+        post.numOfComments += 1
+        post.save(force_update=True)
+
+
+def save_like(sender, instance, created, **kwargs):
+    if created:
+        like = instance
+        post = like.post
+        post.numOfLikes += 1
         post.save(force_update=True)
 
 
 models.signals.post_save.connect(save_comment, sender=Comment)
+models.signals.post_save.connect(save_like, sender=Like)
