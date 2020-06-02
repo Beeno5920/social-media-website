@@ -13,6 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
+import CommentForm from './CommentForm';
+
 
 const titleStyles = (theme) => ({
     root: {
@@ -42,7 +44,7 @@ const cardStyles = {
     }
 };
 
-const DialogTitle = withStyles(titleStyles())((props) => {
+const DialogTitle = withStyles(titleStyles)((props) => {
     const { username, timestamp, classes, onClose, ...other } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
@@ -122,6 +124,9 @@ function PostDialog({ postData }) {
                             {comment.owner}: {comment.content}
                         </Typography>)
                     }
+                </DialogContent>
+                <DialogContent>
+                    <CommentForm postID={postData.id} />
                 </DialogContent>
             </Dialog>
         </div>
