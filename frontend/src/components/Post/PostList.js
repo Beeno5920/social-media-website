@@ -8,6 +8,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
+import PostDialog from "./PostDialog";
+
 
 const styles = {
     card: {
@@ -49,13 +51,7 @@ class PostList extends Component {
                 this.state.posts.map(
                     (post) =>
                     <Grid item xs={12}>
-                        <Card style={styles.card}>
-                            <CardContent style={styles.content}>
-                                <Typography variant="body2" color="textSecondary" component="p">
-                                    {post.content}
-                                </Typography>
-                            </CardContent>
-                        </Card>
+                        <PostDialog postData={post} />
                     </Grid>
                 )
         );
