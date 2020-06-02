@@ -14,7 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
 
-const styles = (theme) => ({
+const titleStyles = (theme) => ({
     root: {
         margin: 0,
         padding: theme.spacing(2),
@@ -42,7 +42,7 @@ const cardStyles = {
     }
 };
 
-const DialogTitle = withStyles(styles)((props) => {
+const DialogTitle = withStyles(titleStyles())((props) => {
     const { username, timestamp, classes, onClose, ...other } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
@@ -66,13 +66,6 @@ const DialogContent = withStyles((theme) => ({
         padding: theme.spacing(2),
     },
 }))(MuiDialogContent);
-
-const DialogActions = withStyles((theme) => ({
-    root: {
-        margin: 0,
-        padding: theme.spacing(1),
-    },
-}))(MuiDialogActions);
 
 function PostDialog({ postData }) {
     const [open, setOpen] = React.useState(false);
