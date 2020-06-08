@@ -13,7 +13,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 
+import Comments from "./Comment";
 import CommentForm from './CommentForm';
+import {Link} from "react-router-dom";
 
 
 const titleStyles = (theme) => ({
@@ -26,6 +28,12 @@ const titleStyles = (theme) => ({
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500],
+    },
+    image: {
+        width: '5vw',
+        height: '5vw',
+        objectFit: 'cover',
+        borderRadius: '50%'
     },
 });
 
@@ -48,12 +56,20 @@ const DialogTitle = withStyles(titleStyles)((props) => {
     const { username, timestamp, classes, onClose, ...other } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
-            <Typography variant="body1">
-                {username}
-            </Typography>
-            <Typography variant="caption" color="textSecondary">
-                {timestamp.substr(0, 10)} {timestamp.substr(11, 5)}
-            </Typography>
+            <img
+                src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/User_font_awesome.svg"}
+                alt="comment"
+                className={classes.image}
+            />
+            <div>
+                <Typography variant="h6" component={Link} to={`/users/${username}`}>
+                    {username}
+                </Typography>
+                &nbsp;
+                <Typography variant="caption" color="textSecondary">
+                    {timestamp.substr(0, 10)} {timestamp.substr(11, 5)}
+                </Typography>
+            </div>
             {onClose ? (
                 <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
                     <CloseIcon />
@@ -111,7 +127,10 @@ function PostDialog({ postData }) {
                     onClose={handleClose}
                 />
                 <DialogContent dividers>
-                    <Typography variant="body1" color="textPrimary" component="p">
+                    <Typography
+                        variant={postData.content.length < 200 ? "h4" : "body1"}
+                        color="textPrimary"
+                        component="p">
                         {postData.content}
                     </Typography>
                 </DialogContent>
@@ -119,11 +138,7 @@ function PostDialog({ postData }) {
                     <Typography variant="subtitle1" color="textSecondary" component="p">
                         Comments:
                     </Typography>
-                    {comments.map((comment) =>
-                        <Typography variant="body1" color="textPrimary" component="p">
-                            {comment.owner}: {comment.content}
-                        </Typography>)
-                    }
+                    <Comments commentData={comments} />
                 </DialogContent>
                 <DialogContent>
                     <CommentForm postID={postData.id} />
