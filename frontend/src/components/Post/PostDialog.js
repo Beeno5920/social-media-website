@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 import { withStyles } from '@material-ui/core/styles';
+import Button from "@material-ui/core/Button";
 import ButtonBase from "@material-ui/core/ButtonBase";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,10 +13,12 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import ChatIcon from '@material-ui/icons/Chat';
 
 import Comments from "./Comment";
 import CommentForm from './CommentForm';
-import {Link} from "react-router-dom";
+import LikeButton from "./LikeButton";
+import { Link } from "react-router-dom";
 
 
 const titleStyles = (theme) => ({
@@ -30,8 +33,8 @@ const titleStyles = (theme) => ({
         color: theme.palette.grey[500],
     },
     image: {
-        width: '5vw',
-        height: '5vw',
+        width: '4vw',
+        height: '4vw',
         objectFit: 'cover',
         borderRadius: '50%'
     },
@@ -56,12 +59,14 @@ const DialogTitle = withStyles(titleStyles)((props) => {
     const { username, timestamp, classes, onClose, ...other } = props;
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
-            <img
-                src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/User_font_awesome.svg"}
-                alt="comment"
-                className={classes.image}
-            />
             <div>
+                <img
+                    src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/User_font_awesome.svg"}
+                    alt="comment"
+                    className={classes.image}
+                />
+                &nbsp;
+                &nbsp;
                 <Typography variant="h6" component={Link} to={`/users/${username}`}>
                     {username}
                 </Typography>
@@ -105,15 +110,47 @@ function PostDialog({ postData }) {
 
     return (
         <div>
-            <ButtonBase onClick={handleOpen}>
                 <Card style={cardStyles.card}>
+                    <CardContent style={cardStyles.content}>
+                        <div>
+                            <img
+                                src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/User_font_awesome.svg"}
+                                alt="comment"
+                                style={{
+                                    maxWidth: '100%',
+                                    width: 30,
+                                    height: 30,
+                                    objectFit: 'cover',
+                                    borderRadius: '50%'
+                                }}
+                            />
+                            &nbsp;
+                            &nbsp;
+                            <Typography variant="body2" component={Link} to={`/users/${postData.owner}`}>
+                                {postData.owner}
+                            </Typography>
+                            &nbsp;
+                            <Typography variant="caption" color="textSecondary">
+                                {postData.timestamp.substr(0, 10)} {postData.timestamp.substr(11, 5)}
+                            </Typography>
+                        </div>
+                    </CardContent>
+                    <ButtonBase onClick={handleOpen}>
                         <CardContent style={cardStyles.content}>
                             <Typography variant="body2" color="textSecondary" component="p">
                                 {postData.content}
                             </Typography>
                         </CardContent>
+                    </ButtonBase>
+                    <CardContent style={cardStyles.content}>
+                        <LikeButton postID={postData.id} />
+                        <span>{postData.numOfLikes}</span>
+                        <Button onClick={handleOpen}>
+                            <ChatIcon color={"primary"} />
+                        </Button>
+                        <span>{postData.numOfComments}</span>
+                    </CardContent>
                 </Card>
-            </ButtonBase>
             <Dialog
                 maxWidth="80%"
                 fullWidth={true}
@@ -133,6 +170,12 @@ function PostDialog({ postData }) {
                         component="p">
                         {postData.content}
                     </Typography>
+                    <LikeButton postID={postData.id} />
+                    <span>{postData.numOfLikes}</span>
+                    <Button disabled={true}>
+                        <ChatIcon color={"primary"} />
+                    </Button>
+                    <span>{postData.numOfComments}</span>
                 </DialogContent>
                 <DialogContent dividers>
                     <Typography variant="subtitle1" color="textSecondary" component="p">
@@ -140,7 +183,7 @@ function PostDialog({ postData }) {
                     </Typography>
                     <Comments commentData={comments} />
                 </DialogContent>
-                <DialogContent>
+                <DialogContent dividers>
                     <CommentForm postID={postData.id} />
                 </DialogContent>
             </Dialog>
