@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import get_list_or_404
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -48,6 +48,7 @@ class PostEditView(RetrieveUpdateAPIView):
 
 
 class PostListView(ListAPIView):
+    permission_classes = [permissions.AllowAny]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
@@ -85,6 +86,7 @@ class CommentCreateView(APIView):
 
 
 class GetPostsCommentsView(APIView):
+    permission_classes = [permissions.AllowAny]
     queryset = Comment.objects.all()
 
     def get(self, request):
