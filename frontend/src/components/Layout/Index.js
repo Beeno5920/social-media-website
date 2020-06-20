@@ -11,7 +11,16 @@ function Layout() {
             <div>
             <Header />
             </div>
-            <Grid container direction="column" justify="center" alignItems="center" spacing={3}>
+            <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={3}
+                style={{
+                marginTop: "5%"
+                }}
+            >
                 <PostList />
             </Grid>
         </div>
