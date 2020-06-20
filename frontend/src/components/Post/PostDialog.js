@@ -14,17 +14,24 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import ChatIcon from '@material-ui/icons/Chat';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Grid from "@material-ui/core/Grid";
 
 import Comments from "./Comment";
 import CommentForm from './CommentForm';
 import LikeButton from "./LikeButton";
-import { Link } from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 
 
 const titleStyles = (theme) => ({
     root: {
         margin: 0,
         padding: theme.spacing(2),
+    },
+    deleteButton: {
+        position: 'absolute',
+        right: theme.spacing(1),
+        top: theme.spacing(7)
     },
     closeButton: {
         position: 'absolute',
@@ -56,7 +63,22 @@ const cardStyles = {
 };
 
 const DialogTitle = withStyles(titleStyles)((props) => {
-    const { username, timestamp, classes, onClose, ...other } = props;
+    const { postID, username, timestamp, classes, onClose, ...other } = props;
+
+    const handleDelete = () => {
+        try {
+            let token = localStorage.getItem("token");
+            let header = {headers: {"Authorization": `JWT ${token}`}};
+            axios
+                .delete(`deletePost/${postID}`, header)
+                .then((res) => console.log(res))
+                .then(onClose)
+                .catch((err) => console.log(err));
+        }  catch (error) {
+            alert(error);
+        }
+    }
+
     return (
         <MuiDialogTitle disableTypography className={classes.root} {...other}>
             <div>
@@ -74,6 +96,9 @@ const DialogTitle = withStyles(titleStyles)((props) => {
                 <Typography variant="caption" color="textSecondary">
                     {timestamp.substr(0, 10)} {timestamp.substr(11, 5)}
                 </Typography>
+                <Button className={classes.deleteButton} onClick={handleDelete}>
+                    <DeleteIcon color={"primary"} />
+                </Button>
             </div>
             {onClose ? (
                 <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
@@ -110,47 +135,47 @@ function PostDialog({ postData }) {
 
     return (
         <div>
-                <Card style={cardStyles.card}>
+            <Card style={cardStyles.card}>
+                <CardContent style={cardStyles.content}>
+                    <div>
+                        <img
+                            src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/User_font_awesome.svg"}
+                            alt="comment"
+                            style={{
+                                maxWidth: '100%',
+                                width: 30,
+                                height: 30,
+                                objectFit: 'cover',
+                                borderRadius: '50%'
+                            }}
+                        />
+                        &nbsp;
+                        &nbsp;
+                        <Typography variant="body2" component={Link} to={`/users/${postData.owner}`}>
+                            {postData.owner}
+                        </Typography>
+                        &nbsp;
+                        <Typography variant="caption" color="textSecondary">
+                            {postData.timestamp.substr(0, 10)} {postData.timestamp.substr(11, 5)}
+                        </Typography>
+                    </div>
+                </CardContent>
+                <ButtonBase onClick={handleOpen}>
                     <CardContent style={cardStyles.content}>
-                        <div>
-                            <img
-                                src={"https://upload.wikimedia.org/wikipedia/commons/7/7c/User_font_awesome.svg"}
-                                alt="comment"
-                                style={{
-                                    maxWidth: '100%',
-                                    width: 30,
-                                    height: 30,
-                                    objectFit: 'cover',
-                                    borderRadius: '50%'
-                                }}
-                            />
-                            &nbsp;
-                            &nbsp;
-                            <Typography variant="body2" component={Link} to={`/users/${postData.owner}`}>
-                                {postData.owner}
-                            </Typography>
-                            &nbsp;
-                            <Typography variant="caption" color="textSecondary">
-                                {postData.timestamp.substr(0, 10)} {postData.timestamp.substr(11, 5)}
-                            </Typography>
-                        </div>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {postData.content}
+                        </Typography>
                     </CardContent>
-                    <ButtonBase onClick={handleOpen}>
-                        <CardContent style={cardStyles.content}>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                {postData.content}
-                            </Typography>
-                        </CardContent>
-                    </ButtonBase>
-                    <CardContent style={cardStyles.content}>
-                        <LikeButton postID={postData.id} />
-                        <span>{postData.numOfLikes}</span>
-                        <Button onClick={handleOpen}>
-                            <ChatIcon color={"primary"} />
-                        </Button>
-                        <span>{postData.numOfComments}</span>
-                    </CardContent>
-                </Card>
+                </ButtonBase>
+                <CardContent style={cardStyles.content}>
+                    <LikeButton postID={postData.id} />
+                    <span>{postData.numOfLikes}</span>
+                    <Button onClick={handleOpen}>
+                        <ChatIcon color={"primary"} />
+                    </Button>
+                    <span>{postData.numOfComments}</span>
+                </CardContent>
+            </Card>
             <Dialog
                 maxWidth="80%"
                 fullWidth={true}
@@ -159,6 +184,7 @@ function PostDialog({ postData }) {
                 open={open}
             >
                 <DialogTitle
+                    postID={postData.id}
                     username={postData.owner}
                     timestamp={postData.timestamp}
                     onClose={handleClose}
