@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from 'axios';
+
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -15,6 +17,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import {Link} from "react-router-dom";
+import Redirect from "react-router-dom/es/Redirect";
 
 const useStyles = makeStyles((theme) => ({
     grow: {
@@ -88,6 +92,8 @@ function Header() {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+    const token = localStorage.getItem("token");
+
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -104,6 +110,12 @@ function Header() {
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('u_id');
+        return <Redirect to="/" />;
+    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -221,7 +233,22 @@ function Header() {
                             <MoreIcon />
                         </IconButton>
                     </div>
-                    <Button color="inherit">Login</Button>
+                    {
+                        token == null ?
+                        <Button
+                            color="inherit"
+                            component={Link}
+                            to={"/login"}
+                        >
+                            Login
+                        </Button> :
+                        <Button
+                            color="inherit"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </Button>
+                    }
                 </Toolbar>
             </AppBar>
             {renderMobileMenu}
