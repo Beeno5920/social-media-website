@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 import axios from 'axios';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -22,28 +22,31 @@ function CommentForm({ postID }) {
     const classes = useStyles();
 
     const [text, setText] = useState("");
+    const [redirectToReferrer, setRedirectToReferrer] = useState(false);
 
     const handleChange = (event) => {
         setText(event.target.value);
     };
 
     const handleSubmit = (event) => {
-      try {
-          let token = localStorage.getItem("token");
-          if (text !== "") {
-              let header = {headers: {"Authorization": `JWT ${token}`}};
-              axios
-                  .post("createComment/", {"post_id": Number(postID), "content": text}, header=header)
-                  .then((res) => console.log(res))
-                  .catch(err => {
-                  });
-          } else {
-              alert("Comment cannot be empty");
-          }
-      }  catch (error) {
-        return <Redirect to="login" />;
-      }
+        event.preventDefault();
+        let token = localStorage.getItem("token");
+        if (text !== "") {
+            let header = {headers: {"Authorization": `JWT ${token}`}};
+            axios
+                .post("createComment/", {"post_id": Number(postID), "content": text}, header=header)
+                .then((res) => console.log(res))
+                .catch(err => {
+                    alert("Please login first");
+                    setRedirectToReferrer(true);
+                });
+        } else {
+            alert("Comment cannot be empty");
+        }
     };
+
+    if (redirectToReferrer === true)
+        return (<Redirect to="/login" />);
 
     return (
         <Grid item sm={12}>

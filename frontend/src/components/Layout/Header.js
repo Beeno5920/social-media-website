@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
@@ -92,6 +93,7 @@ function Header() {
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+    const history = useHistory();
     const token = localStorage.getItem("token");
 
     const handleProfileMenuOpen = (event) => {
@@ -114,7 +116,7 @@ function Header() {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('u_id');
-        return <Redirect to="/" />;
+        history.push('/');
     }
 
     const menuId = 'primary-search-account-menu';
