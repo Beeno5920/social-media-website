@@ -1,10 +1,12 @@
 import jwt
 from django.shortcuts import render
-from django.contrib.auth import get_user_model, login
-from rest_framework import permissions, status
+from django.contrib.auth import get_user_model, login, user_logged_in
+from rest_framework import permissions, status, exceptions
+from rest_framework.authentication import SessionAuthentication, BaseAuthentication, get_authorization_header
 from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .serializers import UserCreateSerializer
 from socialMediaSite.settings import SECRET_KEY
 
@@ -30,7 +32,7 @@ class LoginView(APIView):
         except User.DoesNotExist:
             return Response({'Error': "Email does not exist"}, status=status.HTTP_400_BAD_REQUEST)
         if user is not None and user.check_password(password):
-            login(request, user)
+            # login(request, user)
             payload = {
                 "id": user.id,
                 "username": user.username,

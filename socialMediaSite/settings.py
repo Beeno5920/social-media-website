@@ -35,11 +35,13 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
 JWT_AUTH = {
+    'JWT_VERIFY': True,
+    'JWT_VERIFY_EXPIRATION': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=172800),
     'JWT_RESPONSE_PAYLOAD_HANDLER':'v1.accounts.views.jwt_response_payload_handler'
 }
