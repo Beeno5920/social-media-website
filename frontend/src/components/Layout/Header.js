@@ -21,6 +21,8 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import {Link} from "react-router-dom";
 import Redirect from "react-router-dom/es/Redirect";
 
+import CreatePostDialog from '../Post/CreatePostDialog'
+
 const useStyles = makeStyles((theme) => ({
     grow: {
         flexGrow: 1,
@@ -188,6 +190,9 @@ function Header() {
                     >
                         <MenuIcon />
                     </IconButton>
+                    <CreatePostDialog>
+                        New Post
+                    </CreatePostDialog>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />
