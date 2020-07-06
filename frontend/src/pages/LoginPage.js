@@ -12,12 +12,11 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import {createMuiTheme, makeStyles} from '@material-ui/core/styles';
+import withStyles from "@material-ui/core/styles/withStyles";
 import Container from '@material-ui/core/Container';
 
-const theme = createMuiTheme();
 
-const styles = {
+const useStyles = (theme) => ({
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
@@ -35,12 +34,9 @@ const styles = {
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-};
+});
 
 class LoginPage extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -65,17 +61,20 @@ class LoginPage extends Component {
     };
 
     render() {
+
+        const { classes } = this.props;
+
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline/>
-                <div className={styles.paper}>
-                    <Avatar className={styles.avatar}>
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
                         <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <form className={styles.form} noValidate onSubmit={this.handleSubmit}>
+                    <form className={classes.form} noValidate onSubmit={this.handleSubmit}>
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -107,7 +106,7 @@ class LoginPage extends Component {
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className={styles.submit}
+                            className={classes.submit}
                         >
                             Sign In
                         </Button>
@@ -130,4 +129,4 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+export default withStyles(useStyles)(LoginPage);
