@@ -115,7 +115,7 @@ function Header() {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        localStorage.removeItem('u_id');
+        localStorage.removeItem('userID');
         history.push('/');
     }
 
