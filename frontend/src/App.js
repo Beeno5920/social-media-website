@@ -26,7 +26,7 @@ function App() {
     <MuiThemeProvider>
           <Router>
               <Switch>
-                  <Route exact path="/" component={HomePage} />
+                  <Route exact path="/social-media-website" component={HomePage} />
               </Switch>
               <Switch>
                   <Route

@@ -118,7 +118,7 @@ function Header() {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userID');
-        history.push('/');
+        history.push('/social-media-website');
     }
 
     const menuId = 'primary-search-account-menu';

@@ -57,7 +57,7 @@ class LoginPage extends Component {
             })
             .catch(err => alert(err));
 
-        this.props.history.push('/');
+        this.props.history.push('/social-media-website');
     };
 
     render() {
