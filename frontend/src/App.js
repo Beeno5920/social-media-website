@@ -8,6 +8,7 @@ import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import RegisterPage from "./pages/RegisterPage";
 
 
 function App() {
@@ -33,6 +34,15 @@ function App() {
                       path="/login"
                       render={(props) => {
                           return <LoginPage {...props} setAuth={setAuth} />;
+                      }}
+                  />
+              </Switch>
+              <Switch>
+                  <Route
+                      exact
+                      path="/register"
+                      render={(props) => {
+                          return <RegisterPage {...props} setAuth={setAuth} />;
                       }}
                   />
               </Switch>
