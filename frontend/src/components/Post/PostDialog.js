@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import axios from 'axios';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -64,19 +65,16 @@ const cardStyles = {
 
 const DialogTitle = withStyles(titleStyles)((props) => {
     const { postID, username, timestamp, classes, onClose, ...other } = props;
+    const history = useHistory();
 
     const handleDelete = () => {
-        try {
-            let token = localStorage.getItem("token");
-            let header = {headers: {"Authorization": `JWT ${token}`}};
-            axios
-                .delete(`deletePost/${postID}`, header)
-                .then((res) => console.log(res))
-                .then(onClose)
-                .catch((err) => console.log(err));
-        }  catch (error) {
-            alert(error);
-        }
+        let token = localStorage.getItem("token");
+        let header = {headers: {"Authorization": `JWT ${token}`}};
+        axios
+            .delete(`deletePost/${postID}`, header)
+            .then((res) => console.log(res))
+            .then(res => window.location.reload())
+            .catch(err => alert("You are not allowed to delete this post"));
     }
 
     return (
